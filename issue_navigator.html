@@ -57,6 +57,7 @@ $(document).ready(function() {
 });
   
 var viewModel = function(data) {
+    this.loading = ko.observable(false);
     this.versions = data;
     this.selectedVersion = ko.observable();
     this.selectedVersionName = ko.computed(function() {
@@ -64,6 +65,7 @@ var viewModel = function(data) {
     }, this);
     this.selectedVersion.subscribe(function(newValue) {
         vm.issues([]);
+        vm.loading(true);
         getJsonpData('rest/api/2/search?jql=fixVersion=' + newValue.id, 'issuesFetched');
     });
     this.issues = ko.observableArray();
@@ -88,6 +90,7 @@ var issueDetailsFetched = function(data) {
         summary: data.fields.summary,
         points: data.fields.customfield_10041
     });
+    vm.loading(false);
 }
 
 </script>
@@ -98,6 +101,7 @@ var issueDetailsFetched = function(data) {
 
 <h1 data-bind="text: selectedVersionName"></h1>
 
+<img src="loading.gif" data-bind="visible: loading"></img>
 <ul data-bind="foreach: issues">
     <li>
         <table>
