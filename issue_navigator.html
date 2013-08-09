@@ -63,6 +63,7 @@ var viewModel = function(data) {
         return this.selectedVersion() ? this.selectedVersion().name : "";
     }, this);
     this.selectedVersion.subscribe(function(newValue) {
+        vm.issues([]);
         getJsonpData('rest/api/2/search?jql=fixVersion=' + newValue.id, 'issuesFetched');
     });
     this.issues = ko.observableArray();
