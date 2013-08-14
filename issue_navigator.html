@@ -6,16 +6,16 @@
     body {
         font-family: sans-serif;
     }
-    table {
+    table.issue {
         border-collapse: collapse;
         margin-bottom: 25px;
         max-width: 1200px;
+        background-color: #EEF7FF;
     }
     td {
         padding: 5px 5px 50px 5px;
         vertical-align: top;
         text-align: center;
-        background-color: #EEF7FF;
         min-width: 100px;
     }
     ul {
@@ -26,6 +26,9 @@
     }
     li {
         margin-bottom: 5px;
+    }
+    .buffer {
+      background-color: #FFE9E9;
     }
     .solidBorder, table, td {
         border: 1px solid black;
@@ -69,6 +72,9 @@ var viewModel = function(data) {
         getJsonpData('rest/api/2/search?jql=fixVersion=' + newValue.id, 'issuesFetched');
     });
     this.issues = ko.observableArray();
+    this.toggleBufferClass = function(data, event) {
+      $(event.target).parent().toggleClass('buffer');
+    };
 }
 
 var vm;
@@ -104,9 +110,9 @@ var issueDetailsFetched = function(data) {
 <img src="loading.gif" data-bind="visible: loading"></img>
 <ul data-bind="foreach: issues">
     <li>
-        <table>
+        <table class="issue">
         <tr>
-            <td class="big left"><span data-bind="text: key"></span> <span data-bind="text: summary"></span></td>
+            <td class="big left" data-bind="click: $root.toggleBufferClass"><span data-bind="text: key"></span> <span data-bind="text: summary"></span></td>
             <td>Date</td>
             <td>
                 Dev
