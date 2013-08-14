@@ -44,6 +44,9 @@
     .left {
         text-align: left;
     }
+    .hidden {
+        display: none
+    }
 </style>
 <script>
 
@@ -60,7 +63,12 @@ $(document).ready(function() {
 });
   
 var viewModel = function(data) {
+    var _this = this;
     this.loading = ko.observable(false);
+    this.notLoading = ko.computed(function() {
+      // NOTE: this isn't working as expected.  need to figure out why.
+      return !_this.loading();
+    });
     this.versions = data;
     this.selectedVersion = ko.observable();
     this.selectedVersionName = ko.computed(function() {
@@ -72,6 +80,7 @@ var viewModel = function(data) {
         getJsonpData('rest/api/2/search?jql=fixVersion=' + newValue.id, 'issuesFetched');
     });
     this.issues = ko.observableArray();
+    this.selectedIssues = ko.observableArray();
     this.toggleBufferClass = function(data, event) {
       $(event.target).parent().toggleClass('buffer');
     };
@@ -107,8 +116,13 @@ var issueDetailsFetched = function(data) {
 
 <h1 data-bind="text: selectedVersionName"></h1>
 
-<img src="loading.gif" data-bind="visible: loading"></img>
-<ul data-bind="foreach: issues">
+<img src="loading.gif" class="hidden" data-bind="visible: loading"></img>
+
+<select size="6" multiple="true" data-bind="visible: notLoading, options: issues, optionsText: 'key', selectedOptions: selectedIssues"></select>
+
+<br /><br />
+
+<ul data-bind="foreach: selectedIssues">
     <li>
         <table class="issue">
         <tr>
