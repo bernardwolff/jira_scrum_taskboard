@@ -116,29 +116,33 @@ var issueDetailsFetched = function(data) {
 
 <img src="loading.gif" data-bind="visible: loading"></img>
 
-<select size="6" multiple="true" data-bind="visible: showSelector, options: issues, optionsText: 'key', selectedOptions: selectedIssues"></select>
+<div data-bind="visible: showSelector() && !loading()">
 
-<br /><br />
+  <select size="6" multiple="true" data-bind="options: issues, optionsText: 'key', selectedOptions: selectedIssues"></select>
 
-<ul data-bind="foreach: selectedIssues">
-    <li>
-        <table class="issue" data-bind="css: {buffer: isBuffer()}, click: toggleBufferClass">
-        <tr>
-            <td class="big left"><span data-bind="text: key"></span> <span data-bind="text: summary"></span></td>
-            <td>Date</td>
-            <td>
-                Dev
-                <ul>
-                    <li><span class="solidBorder box"></span>Unit Test</span></li>
-                    <li><span class="solidBorder box"></span>Web Test</span></li>
-                </ul>
-            </td>
-            <td>QA</td>
-            <td class="big"><span data-bind="text: points"></span></td>
-        </tr>
-        </table>
-    </li>
-</ul>
+  <br /><br />
+
+  <ul data-bind="foreach: selectedIssues">
+      <li>
+          <table class="issue" data-bind="css: {buffer: isBuffer()}, click: toggleBufferClass">
+          <tr>
+              <td class="big left"><span data-bind="text: key"></span> <span data-bind="text: summary"></span></td>
+              <td>Date</td>
+              <td>
+                  Dev
+                  <ul>
+                      <li><span class="solidBorder box"></span>Unit Test</span></li>
+                      <li><span class="solidBorder box"></span>Web Test</span></li>
+                  </ul>
+              </td>
+              <td>QA</td>
+              <td class="big"><span data-bind="text: points"></span></td>
+          </tr>
+          </table>
+      </li>
+  </ul>
+
+</div>
 
 </body>
 </html>
