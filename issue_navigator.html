@@ -11,6 +11,7 @@
         margin-bottom: 25px;
         max-width: 1200px;
         background-color: #EEF7FF;
+        -webkit-print-color-adjust: exact;
     }
     td {
         padding: 5px 5px 50px 5px;
@@ -28,7 +29,7 @@
         margin-bottom: 5px;
     }
     .buffer {
-      background-color: #FFE9E9;
+      background-color: #FFE9E9 !important;
     }
     .solidBorder, table, td {
         border: 1px solid black;
@@ -43,9 +44,6 @@
     }
     .left {
         text-align: left;
-    }
-    .hidden {
-        display: none
     }
 </style>
 <script>
@@ -65,10 +63,7 @@ $(document).ready(function() {
 var viewModel = function(data) {
     var _this = this;
     this.loading = ko.observable(false);
-    this.notLoading = ko.computed(function() {
-      // NOTE: this isn't working as expected.  need to figure out why.
-      return !_this.loading();
-    });
+    this.showSelector = ko.observable(false);
     this.versions = data;
     this.selectedVersion = ko.observable();
     this.selectedVersionName = ko.computed(function() {
@@ -81,9 +76,6 @@ var viewModel = function(data) {
     });
     this.issues = ko.observableArray();
     this.selectedIssues = ko.observableArray();
-    this.toggleBufferClass = function(data, event) {
-      $(event.target).parent().toggleClass('buffer');
-    };
 }
 
 var vm;
@@ -103,9 +95,15 @@ var issueDetailsFetched = function(data) {
     vm.issues.push({
         key: data.key,
         summary: data.fields.summary,
-        points: data.fields.customfield_10041
+        points: data.fields.customfield_10041,
+        // ideally we'd get this from the data, for now it's just defaulted to false
+        isBuffer: ko.observable(false),
+        toggleBufferClass: function(data, event) {
+          data.isBuffer(!data.isBuffer());
+        }
     });
     vm.loading(false);
+    vm.showSelector(true);
 }
 
 </script>
@@ -116,17 +114,17 @@ var issueDetailsFetched = function(data) {
 
 <h1 data-bind="text: selectedVersionName"></h1>
 
-<img src="loading.gif" class="hidden" data-bind="visible: loading"></img>
+<img src="loading.gif" data-bind="visible: loading"></img>
 
-<select size="6" multiple="true" data-bind="visible: notLoading, options: issues, optionsText: 'key', selectedOptions: selectedIssues"></select>
+<select size="6" multiple="true" data-bind="visible: showSelector, options: issues, optionsText: 'key', selectedOptions: selectedIssues"></select>
 
 <br /><br />
 
 <ul data-bind="foreach: selectedIssues">
     <li>
-        <table class="issue">
+        <table class="issue" data-bind="css: {buffer: isBuffer()}, click: toggleBufferClass">
         <tr>
-            <td class="big left" data-bind="click: $root.toggleBufferClass"><span data-bind="text: key"></span> <span data-bind="text: summary"></span></td>
+            <td class="big left"><span data-bind="text: key"></span> <span data-bind="text: summary"></span></td>
             <td>Date</td>
             <td>
                 Dev
