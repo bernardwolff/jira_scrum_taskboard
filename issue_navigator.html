@@ -13,6 +13,11 @@
         background-color: #B5DAFF;
         -webkit-print-color-adjust: exact;
     }
+    @media print {
+      .issue {
+        page-break-inside: avoid;
+      }
+    }
     td {
         padding: 5px 5px 50px 5px;
         vertical-align: top;
