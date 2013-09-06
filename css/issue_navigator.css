@@ -41,7 +41,7 @@
         width: 56%;
     }
     .big {
-        font-size: 2.5em;
+        font-size: 2.7em;
         font-weight: bold;
     }
     .left {
@@ -66,9 +66,6 @@
         border: 1px solid black;
         width: auto;
         min-height: 50px;
-    }
-    @media screen {
-        .pageBreak	{ display: block; page-break-after: auto; }
     }
     @media print {
       .issue {
