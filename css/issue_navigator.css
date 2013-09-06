@@ -38,7 +38,7 @@
         margin-right: 20px;
     }
     .big {
-        font-size: 2em;
+        font-size: 2.5em;
         font-weight: bold;
     }
     .left {
@@ -68,6 +68,8 @@
         .pageBreak	{ display: block; page-break-after: auto; }
     }
     @media print {
-        .pageBreak	{ display: block; page-break-after: always; }
+      .issue {
+        page-break-inside: avoid;
+      }
     }
 
