@@ -1,154 +1,53 @@
 <html>
 <head>
-<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-<script src="http://ajax.aspnetcdn.com/ajax/knockout/knockout-2.2.1.js"></script>
-<style>
-    body {
-        font-family: sans-serif;
-    }
-    table.issue {
-        border-collapse: collapse;
-        margin-bottom: 25px;
-        max-width: 1200px;
-        background-color: #B5DAFF;
-        -webkit-print-color-adjust: exact;
-    }
-    @media print {
-      .issue {
-        page-break-inside: avoid;
-      }
-    }
-    td {
-        padding: 5px 5px 50px 5px;
-        vertical-align: top;
-        text-align: center;
-        min-width: 100px;
-    }
-    ul {
-        list-style-type: none;
-        margin: 0px;
-        padding: 0px;
-        text-align: left;
-    }
-    li {
-        margin-bottom: 5px;
-    }
-    .buffer {
-      background-color: #FFE9E9 !important;
-    }
-    .solidBorder, table, td {
-        border: 1px solid black;
-    }
-    .box {
-        padding-left: 10px;
-        margin-bottom: 5px;
-        margin-right: 20px;
-    }
-    .big {
-        font-size: 2em;
-        font-weight: bold;
-    }
-    .left {
-        text-align: left;
-    }
-</style>
-<script>
-
-function getJsonpData(url, callback) {
-    var sep = url.indexOf('?') >= 0 ? '&' : '?';
-    $.ajax({type: "GET",
-            url: 'http://tools.tntp.org/jira/' + url + sep + 'jsonp-callback=' + callback,
-            contentType: "application/javascript; charset=utf-8",
-            dataType: "jsonp"});
-}
-
-$(document).ready(function() {
-    getJsonpData('rest/api/2/project/TNEX/versions', 'versionsFetched');
-});
-  
-var viewModel = function(data) {
-    var _this = this;
-    this.loading = ko.observable(false);
-    this.showSelector = ko.observable(false);
-    this.versions = data;
-    this.selectedVersion = ko.observable();
-    this.selectedVersionName = ko.computed(function() {
-        return this.selectedVersion() ? this.selectedVersion().name : "";
-    }, this);
-    this.selectedVersion.subscribe(function(newValue) {
-        vm.issues([]);
-        vm.loading(true);
-        getJsonpData('rest/api/2/search?jql=fixVersion=' + newValue.id, 'issuesFetched');
-    });
-    this.issues = ko.observableArray();
-    this.selectedIssues = ko.observableArray();
-}
-
-var vm;
-
-var versionsFetched = function(data){
-    vm = new viewModel(data);
-    ko.applyBindings(vm);
-}
-
-var issuesFetched = function(data) {
-    $.each(data.issues, function(index, issue) {
-        getJsonpData('rest/api/2/issue/' + issue.key, 'issueDetailsFetched');
-    });
-}
-
-var issueDetailsFetched = function(data) {
-    vm.issues.push({
-        key: data.key,
-        summary: data.fields.summary,
-        points: data.fields.customfield_10041,
-        // ideally we'd get this from the data, for now it's just defaulted to false
-        isBuffer: ko.observable(false),
-        toggleBufferClass: function(data, event) {
-          data.isBuffer(!data.isBuffer());
-        }
-    });
-    vm.loading(false);
-    vm.showSelector(true);
-}
-
-</script>
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/issue_navigator.css" />
+    <script src="http://ajax.aspnetcdn.com/ajax/knockout/knockout-2.2.1.js"></script>
+    <script src="js/issue_navigator.js"></script>
 </head>
 <body>
 
-<select data-bind="options: versions, optionsText: 'name', value: selectedVersion, optionsCaption: 'Pick a sprint...'"></select>
+<div id="hideDuringPrint">
+    <select data-bind="options: versions, optionsText: 'name', value: selectedVersion, optionsCaption: 'Pick a sprint...'"></select>
 
-<h1 data-bind="text: selectedVersionName"></h1>
+    <h1 data-bind="text: selectedVersionName"></h1>
 
-<img src="loading.gif" data-bind="visible: loading"></img>
+    <img src="loading.gif" data-bind="visible: loading"></img>
 
-<div data-bind="visible: showSelector() && !loading()">
+    <div  data-bind="visible: showSelector() && !loading()" />
+    <select size="6" multiple="true" data-bind="options: issues, optionsText: 'key', selectedOptions: selectedIssues"></select>
+</div>
 
-  <select size="6" multiple="true" data-bind="options: issues, optionsText: 'key', selectedOptions: selectedIssues"></select>
-
-  <br /><br />
+<br  />
+<br />
 
   <ul data-bind="foreach: selectedIssues">
       <li>
-          <table class="issue" data-bind="css: {buffer: isBuffer()}, click: toggleBufferClass">
+      <table class="issue pageBreak" data-bind="css: {buffer: isBuffer()}, click: toggleBufferClass, clickBubble: false">
           <tr>
               <td class="big left"><span data-bind="text: key"></span> <span data-bind="text: summary"></span></td>
-              <td>Date</td>
+              <td>Date
+                  <div class="clickToEdit" data-bind="clickToEdit: date"></div>
+              </td>
               <td>
                   Dev
                   <ul>
                       <li><span class="solidBorder box"></span>Unit Test</span></li>
                       <li><span class="solidBorder box"></span>Web Test</span></li>
                   </ul>
+                  <div class="clickToEdit big" data-bind="clickToEdit: developer" />
               </td>
-              <td>QA</td>
-              <td class="big"><span data-bind="text: points"></span></td>
+              <td>QA
+                  <div class="clickToEdit big" data-bind="clickToEdit: qa" />
+              </td>
+              <td class="big">
+                  <div class="clickToEdit big" data-bind="clickToEdit: points" />
+              </td>
           </tr>
           </table>
       </li>
   </ul>
 
-</div>
 
 </body>
 </html>

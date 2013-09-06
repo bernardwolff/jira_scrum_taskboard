@@ -1,0 +1,72 @@
+    *:focus {
+        outline: 0;
+    }
+    body {
+        font-family: sans-serif;
+    }
+    table.issue {
+        border-collapse: collapse;
+        margin-bottom: 25px;
+        max-width: 1200px;
+        background-color: #B5DAFF;
+        -webkit-print-color-adjust: exact;
+    }
+    td {
+        padding: 5px 5px 50px 5px;
+        vertical-align: top;
+        text-align: center;
+        min-width: 100px;
+    }
+    ul {
+        list-style-type: none;
+        margin: 0px;
+        padding: 0px;
+        text-align: left;
+    }
+    li {
+        margin-bottom: 5px;
+    }
+    .buffer {
+      background-color: #FFE9E9 !important;
+    }
+    .solidBorder, table, td {
+        border: 1px solid black;
+    }
+    .box {
+        padding-left: 10px;
+        margin-bottom: 5px;
+        margin-right: 20px;
+    }
+    .big {
+        font-size: 2em;
+        font-weight: bold;
+    }
+    .left {
+        text-align: left;
+    }
+    .clickToEdit {
+        min-height: 100px;
+        width: 100%;
+        font-size: 2em;
+        font-weight: bold;
+    }
+    .clickToEdit a {
+        width: auto;
+        min-height: 100px;
+        display: block;
+    }
+    .clickToEdit a:hover {
+        border: 2px solid #EDD400;
+        background: #FCE94F url('../imgs/edit.png') no-repeat;
+    }
+    .clickToEdit textarea {
+        border: 1px solid black;
+        width: auto;
+        min-height: 100px;
+    }
+    @media print {
+      .issue {
+        page-break-inside: avoid;
+      }
+    }
+
