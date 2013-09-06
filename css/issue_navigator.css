@@ -6,20 +6,20 @@
     }
     table.issue {
         border-collapse: collapse;
-        margin-bottom: 25px;
-        max-width: 1200px;
+        margin-bottom: 5px;
+        width: 1200px;
         background-color: #B5DAFF;
         -webkit-print-color-adjust: exact;
     }
     td {
-        padding: 5px 5px 50px 5px;
+        padding: 5px 5px 5px 5px;
         vertical-align: top;
         text-align: center;
         min-width: 100px;
     }
     ul {
         list-style-type: none;
-        margin: 0px;
+        margin: 0px
         padding: 0px;
         text-align: left;
     }
@@ -37,6 +37,9 @@
         margin-bottom: 5px;
         margin-right: 20px;
     }
+    .summary {
+        width: 56%;
+    }
     .big {
         font-size: 2.5em;
         font-weight: bold;
@@ -45,14 +48,14 @@
         text-align: left;
     }
     .clickToEdit {
-        min-height: 100px;
+        min-height: 50px;
         width: 100%;
         font-size: 2em;
         font-weight: bold;
     }
     .clickToEdit a {
         width: auto;
-        min-height: 100px;
+        min-height: 50px;
         display: block;
     }
     .clickToEdit a:hover {
@@ -62,7 +65,7 @@
     .clickToEdit textarea {
         border: 1px solid black;
         width: auto;
-        min-height: 100px;
+        min-height: 50px;
     }
     @media screen {
         .pageBreak	{ display: block; page-break-after: auto; }
@@ -70,6 +73,9 @@
     @media print {
       .issue {
         page-break-inside: avoid;
+      }
+      .hideDuringPrint {
+        display: none;
       }
     }
 
